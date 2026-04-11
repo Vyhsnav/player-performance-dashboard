@@ -24,9 +24,10 @@ def standings():
             "team": team['team']['name'],
             "points": team['points'],
             "won": team['won'],
-            "drawn": team['draw'],
+            "draw": team['draw'],
             "lost": team['lost'],
-            "crest": team['team']['crest']
+            "crest": team['team']['crest'],
+            "played": team['playedGames']
         })
     return jsonify(result)
     

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Performance Dashboard</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box;}
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #161b22;
+            padding: 20px 40px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+        }
+        header h1 {
+            font-size: 1.5rem;
+            color: #58a6ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #161b22;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #21262d;
+
+        }
+
+        th{
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-top: 1px solid #21262d;
+            font-size: 0.95rem;
+        }
+
+        tr:hover {
+            background: #1c2128;
+
+        }
+
+        .team-cell{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+        .team-cell img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .position {
+            color: #8b949e;
+            font-weight: bold;
+            width: 30px;
+        }
+
+        .points{
+            font-weight: bold;
+            color: #58a6ff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8b949e;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Player Performance Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <h2>Premier League Standings</h2>
+        <div id="standings-container">
+            <p class="loading">Loading standings...</p>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = "http://localhost:3001";
+
+        async function loadStandings() {
+            const res = await fetch(`${BASE_URL}/api/standings`);
+            const data = await res.json();
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(team => {
+                html += `
+                    <tr>
+                        <td class="position">${team.position}</td>
+                        <td>
+                            <div class="team-cell">
+                                <img src="${team.crest}" alt="${team.team}"/>
+                                ${team.team}
+                            </div>
+                        </td>
+                        <td>${team.won + team.drawn + team.lost}</td>
+                        <td>${team.won}</td>
+                        <td>${team.drawn}</td>
+                        <td>${team.lost}</td>
+                        <td class="points">${team.points}</td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            document.getElementById("standings-container").innerHTML = html;
+        }
+
+        loadStandings();
+    </script>
+
+</body>
+</html>
+
+
+
