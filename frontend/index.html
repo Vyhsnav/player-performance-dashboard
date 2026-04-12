@@ -149,7 +149,9 @@
                         <td>
                             <div class="team-cell">
                                 <img src="${team.crest}" alt="${team.team}"/>
-                                ${team.team}
+                                <a href="pages/team.html?id=${team.id}" style="color:#e6edf3; text-decoration:none;">
+                                    ${team.team}
+                                </a>
                             </div>
                         </td>
                         <td>${team.won + team.draw + team.lost}</td>

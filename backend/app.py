@@ -20,6 +20,7 @@ def standings():
     result = []
     for team in table:
         result.append({
+            "id": team['team']['id'],
             "position": team['position'],
             "team": team['team']['name'],
             "points": team['points'],
