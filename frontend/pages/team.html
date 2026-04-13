@@ -160,7 +160,7 @@
                 html += `<div class="squad-grid">`;
                 players.forEach(player => {
                     html += `
-                        <div class="player-card">
+                        <div class="player-card" onclick="window.location.href='player.html?id=${player.id}&teamId=${teamId}'">
                             <div class="name">${player.name}</div>
                             <div class="position">${player.position}</div>
                         </div>

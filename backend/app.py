@@ -45,7 +45,7 @@ def team(team_id):
         "founded": data['founded'],
         "crest": data["crest"],
 
-        "squad": [{"name": p['name'],"position": p['position']} for p in data['squad']]
+        "squad": [{"id": p["id"], "name": p["name"], "position": p["position"]} for p in data['squad']]
     }
     return jsonify(result)
 

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI',sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #161b22;
+            padding: 20px 40px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+        }
+
+        header a {
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        header h1 {
+            font-size: 1.5rem;
+            color: #58a6ff;
+            margin-left: auto;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            
+
+        }
+
+        .player-header {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 32px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .player-avatar {
+            width: 80px;
+            height: 80px;
+            background: #21262d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .player-info h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .player-info p {
+            color: #8b949e;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .player-info {
+            color: #8b949e;
+            margin-top: 4px;
+            font-size: 0.95rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stats-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+
+        .stat-card .label {
+            color: #8b949e;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a id="back-link" href="#">← Back to Team</a>
+        <h1>⚽ Player Performance Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <div id="player-header" class="player-header">
+            <p class="loading"Loading player information...</p>
+        </div>
+        <div id="player-stats" class="stats-grid"></div>
+    </div>
+
+    <script>
+        const BASE_URL = "http://localhost:3001";
+        
+        const params = new URLSearchParams(window.location.search);
+        const playerId = params.get("id");
+        const teamId = params.get("teamId");
+
+        document.getElementById("back-link").href = `team.html?id=${teamId}`;
+
+        async function loadPlayer() {
+            
+            const res = await fetch(`${BASE_URL}/api/player/${playerId}`);
+            const data = await res.json();
+                
+            const dob = new Date(data.dateOfBirth);
+            const age = Math.floor((new Date() - dob) / (365.25 * 24 * 60 * 60 * 1000));
+
+            document.getElementById("player-header").innerHTML = `
+                <div class="player-avatar">👤</div>
+                <div class="player-info">
+                    <h2>${data.name}</h2>
+                    <p>🌍 ${data.nationality}</p>
+                    <p>🏟️ ${data.currentTeam || "N/A"}</p>
+                    
+                </div>
+            `;
+
+            document.getElementById("player-stats").innerHTML = `
+                <div class="stats-card">
+                    <div class="value">${data.position || "N/A"}</div>
+                    <div class="label">Position</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">${age}</div>
+                    <div class="label">Age</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">${data.dateOfBirth}</div>
+                    <div class="label">Date of Birth</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">${data.nationality}</div>
+                    <div class="label">Nationality</div>
+                </div>
+            `;
+
+        }
+        loadPlayer();
+    </script>
+</body>
+</html>
